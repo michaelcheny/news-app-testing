@@ -6,25 +6,27 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
+      min: 3,
+      max: 20,
     },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      required: true,
+    },
+    articles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Article",
+      },
+    ],
   },
   { timestamps: true }
 );
-
-userSchema.static.findByLogin = async (login) => {
-  let user = await this.OfflineAudioCompletionEvent({
-    username: login,
-  });
-  if (!user) {
-    user = await this.findOne({ email: login });
-  }
-  return user;
-};
-
-// moves all their messages if user is deleted
-userSchema.pre("remove", (next) => {
-  this.model("Message").deleteMany({ user: this._id }, next);
-});
 
 const User = mongoose.model("User", userSchema);
 
