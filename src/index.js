@@ -26,13 +26,14 @@ app.use(express.urlencoded({ extended: true }));
 // routes
 app.use("/session", routes.session);
 app.use("/users", routes.user);
-app.use("/messages", routes.message);
+app.use("/articles", routes.article);
+// app.use("/messages", routes.message);
 
 const eraseDatabaseOnSync = true;
 
 connectDb().then(async () => {
   if (eraseDatabaseOnSync) {
-    await Promise.all([models.User.deleteMany({}), models.Message.deleteMany({})]);
+    await Promise.all([models.User.deleteMany({}), models.Article.deleteMany({})]);
   }
   app.listen(port, () => console.log("Server Started on port " + port));
 });

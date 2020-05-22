@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -28,6 +29,26 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+// mongoose middleware - only hash pw is its modified or on user create
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) return next();
+  bcrypt.hash(this.password, 10, (error, passwordHash) => {
+    if (error) return next(error);
+    this.password = passwordHash;
+    next();
+  });
+});
+
+// UserSchema.methods.comparePassword = function(password, cb) {
+//   bcrypt.compare(password, this.password, (error, isMatch) ={
+//     if (error) {
+//       return cb(error);
+//     } else {
+//       if (!isMatch) return cb(null, isMatch)
+//     }
+//   })
+// }
+
+const User = mongoose.model("User", UserSchema);
 
 export default User;
