@@ -1,28 +1,13 @@
-let users = {
-  1: {
-    id: "1",
-    username: "cookie monster",
-  },
-  2: {
-    id: "2",
-    username: "tortellini houdini",
-  },
+import mongoose from "mongoose";
+
+import User from "./user";
+import Message from "./message";
+
+const connectDb = () => {
+  return mongoose.connect(process.env.DB_URL, { useNewUrlParser: true });
 };
 
-let messages = {
-  1: {
-    id: "1",
-    text: "ima eat chuuu",
-    userId: "1",
-  },
-  2: {
-    id: "2",
-    text: "muhahahahaw",
-    userId: "2",
-  },
-};
+const models = { User, Message };
 
-export default {
-  users,
-  messages,
-};
+export { connectDb };
+export default models;

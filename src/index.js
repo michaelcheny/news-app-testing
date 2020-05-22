@@ -3,8 +3,10 @@ import cors from "cors";
 import express from "express";
 const port = process.env.PORT;
 
-import models from "./models";
+// import models from "./models";
 import routes from "./routes";
+
+import models, { connectDb } from "./models";
 
 const app = express();
 
@@ -26,4 +28,11 @@ app.use("/session", routes.session);
 app.use("/users", routes.user);
 app.use("/messages", routes.message);
 
-app.listen(port, () => console.log("Server Started on port " + port));
+const eraseDatabaseOnSync = true;
+
+connectDb().then(async () => {
+  if (eraseDatabaseOnSync) {
+    await Promise.all([models.User.deleteMany({}), models.Message.deleteMany({})]);
+  }
+  app.listen(port, () => console.log("Server Started on port " + port));
+});
