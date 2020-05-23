@@ -26,7 +26,7 @@ passport.use(
         if (error) return done(error, false);
         // if user found, no error, and pass user
         if (user) return done(null, user);
-        else return done(null, false);
+        return done(null, false);
       });
     }
   )
