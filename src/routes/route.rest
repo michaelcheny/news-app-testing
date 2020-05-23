@@ -10,7 +10,16 @@ POST http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "username": "testing3",
+  "username": "testing1",
   "password": "password",
   "role": "user"
+}
+
+###
+POST http://localhost:3001/users/login
+Content-Type: application/json
+
+{
+  "username": "testing1",
+  "password": "password"
 }

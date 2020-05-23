@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Router } from "express";
 import User from "../models/user";
 import Article from "../models/article";
@@ -8,29 +9,32 @@ const JWT = require("jsonwebtoken");
 
 const router = Router();
 
-// registration
-// router.post("/register", (req, res) => {
-//   const { username, password, role } = req.body;
-//   User.findOne({ username }, (error, user) => {
-//     if (error)
-//       res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
-//     if (user)
-//       res
-//         .status(400)
-//         .json({ message: { msgBody: "Username is already taken", msgError: true } });
+// helper
+const signToken = (userId) => {
+  return JWT.sign(
+    {
+      iss: process.env.JWT_SECRET,
+      sub: userId,
+    },
+    // JWT SECRET KEY
+    process.env.JWT_SECRET,
+    // jwt expiration
+    { expiresIn: "1h" }
+  );
+};
 
-//     const newUser = newUser({ username, password, role });
-//     newUser.save((error) => {
-//       if (error) {
-//         res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
-//       } else {
-//         res.status(201).json({
-//           message: { msgBody: "Account created successfully", msgError: false },
-//         });
-//       }
-//     });
-//   });
-// });
+// login
+router.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+  if (req.isAuthenticated()) {
+    console.log(req.user);
+    const { _id, username, role } = req.user;
+    const token = signToken(_id);
+    // httpOnly prevents against JS scripting, sameSite for CORS
+    res.cookie("access_token", token, { httpOnly: true, sameSite: true });
+
+    res.status(200).json({ isAuthenticated: true, user: { username, role } });
+  }
+});
 
 // all
 router.get("/", async (req, res) => {
@@ -49,16 +53,6 @@ router.get("/:userId", (req, res) => {
 
 // create one
 router.post("/", (req, res) => {
-  // try {
-  //   const salt = await bcrpyt.genSalt();
-  //   const hashedPassword = await bcrpyt.hash(req.body.password, salt);
-  //   console.log(salt);
-  //   console.log(hashedPassword);
-  //   const user = {
-  //     username: req.body.username,
-  //     password: hashedPassword,
-  //   };
-  // } catch (err) {}
   const { username, password, role } = req.body;
   User.findOne({ username }, (error, user) => {
     if (error)
