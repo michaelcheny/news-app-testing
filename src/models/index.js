@@ -15,17 +15,17 @@ const connectDb = () => {
 /* 88888888888888888888888888*/
 /* testing dummy shittt */
 
-// const userInput = {
-//   username: "michael",
-//   password: "password",
-//   role: "admin",
-// };
+const userInput = {
+  username: "michael",
+  password: "password",
+  role: "admin",
+};
 
-// const user = new User(userInput);
-// user.save((error, response) => {
-//   if (error) console.log(error);
-//   console.log(response);
-// });
+const user = new User(userInput);
+user.save((error, response) => {
+  if (error) console.log(error);
+  console.log(response);
+});
 
 /* END OF TESTING DUMMY SHIT */
 // &&&&&&&&&&&&&&&&&&&&&&&&&&& //

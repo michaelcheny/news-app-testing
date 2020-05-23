@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema(
 );
 
 // mongoose middleware - only hash pw is its modified or on user create
-UserSchema.pre("save", async function (next) {
+UserSchema.pre("save", function (next) {
   if (!this.isModified("password")) return next();
   bcrypt.hash(this.password, 10, (error, passwordHash) => {
     if (error) return next(error);
@@ -51,10 +51,6 @@ UserSchema.methods.comparePassword = function (password, cb) {
     }
   });
 };
-
-// UserSchema.methods.validatePassword = async function validatePassword(password) {
-//   return bcrypt.compare(password, this.password);
-// };
 
 const User = mongoose.model("User", UserSchema);
 
