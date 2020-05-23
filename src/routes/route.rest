@@ -2,7 +2,7 @@ GET http://localhost:3001/users
 
 ###
 
-GET http://localhost:3001/users/1
+GET http://localhost:3001/users/5ec9884db5f38f20c5cf9cbc
 
 ###
 
@@ -10,5 +10,7 @@ POST http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "username": "michael"
+  "username": "testing1",
+  "password": "password",
+  "role": "user"
 }
