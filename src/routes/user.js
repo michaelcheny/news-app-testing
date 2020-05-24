@@ -3,37 +3,43 @@ import { Router } from "express";
 import User from "../models/user";
 import Article from "../models/article";
 import bcrpyt from "bcrypt";
-import passport from "passport";
+const passport = require("passport");
 const passportConfig = require("../../passport");
 const JWT = require("jsonwebtoken");
 
 const router = Router();
 
 // helper
-const signToken = (userId) => {
+const signToken = (userID) => {
   return JWT.sign(
     {
       iss: process.env.JWT_SECRET,
-      sub: userId,
+      sub: userID,
     },
-    // JWT SECRET KEY
     process.env.JWT_SECRET,
-    // jwt expiration
-    { expiresIn: "1h" }
+    { expiresIn: "1 day" }
   );
 };
 
 // login
 router.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
-    console.log(req.user);
+    // console.log(req.user);
     const { _id, username, role } = req.user;
     const token = signToken(_id);
     // httpOnly prevents against JS scripting, sameSite for CORS
-    res.cookie("access_token", token, { httpOnly: true, sameSite: true });
+    res.cookie("JWT", token, { httpOnly: true, sameSite: true });
 
     res.status(200).json({ isAuthenticated: true, user: { username, role } });
   }
+});
+
+// logout
+router.get("/logout", passport.authenticate("jwt", { session: false }), (req, res) => {
+  console.log(res);
+  res.clearCookie("JWT");
+  res.json({ user: { username: "", role: "" }, success: true });
+  // req.logOut();
 });
 
 // all

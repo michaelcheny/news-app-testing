@@ -6,7 +6,7 @@ GET http://localhost:3001/users/5ec9884db5f38f20c5cf9cbc
 
 ###
 
-POST http://localhost:3001/users
+POST http://localhost:3001/users/
 Content-Type: application/json
 
 {
@@ -23,3 +23,6 @@ Content-Type: application/json
   "username": "testing1",
   "password": "password"
 }
+
+###
+GET http://localhost:3001/users/logout

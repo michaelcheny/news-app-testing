@@ -2,14 +2,13 @@ import "dotenv/config";
 import passport from "passport";
 const LocalStategy = require("passport-local").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
-
 import User from "./src/models/user";
 
 // extracts the jwt from the cookie
 const cookieExtractor = (req) => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies["access_token"];
+    token = req.cookies["JWT"];
   }
   return token;
 };
@@ -22,7 +21,7 @@ passport.use(
       secretOrKey: process.env.JWT_SECRET,
     },
     (payload, done) => {
-      User.findById({ _id: payload.sub }, (error, user) => {
+      User.findOne({ _id: payload.sub }, (error, user) => {
         if (error) return done(error, false);
         // if user found, no error, and pass user
         if (user) return done(null, user);
@@ -42,7 +41,7 @@ passport.use(
       // no user
       if (!user) return done(null, false);
       // found user
-      user.comparePassword(password, done);
+      return user.comparePassword(password, done);
     });
   })
 );
