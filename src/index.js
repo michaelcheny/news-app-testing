@@ -30,7 +30,7 @@ db.once("open", () => console.log(`Connected to DB`));
 
 // routes
 app.use("/users", routes.user);
-// app.use("/articles", routes.article);
+app.use("/articles", routes.article);
 // app.use("/session", routes.session);
 // app.use("/messages", routes.message);
 

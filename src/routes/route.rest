@@ -26,3 +26,15 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/users/logout
+
+
+###
+GET http://localhost:3001/articles/
+
+###
+POST http://localhost:3001/articles/
+Content-Type: application/json
+
+{
+  "name": "woogy booogy"
+}

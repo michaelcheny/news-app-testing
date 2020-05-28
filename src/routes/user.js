@@ -61,21 +61,14 @@ router.get("/:userId", (req, res) => {
 router.post("/", (req, res) => {
   const { username, password, role } = req.body;
   User.findOne({ username }, (error, user) => {
-    if (error)
-      return res
-        .status(500)
-        .json({ message: { msgBody: "Error occured", msgError: true } });
+    if (error) return res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
     if (user)
-      return res
-        .status(400)
-        .json({ message: { msgBody: "Username is already taken", msgError: true } });
+      return res.status(400).json({ message: { msgBody: "Username is already taken", msgError: true } });
 
     const newUser = new User({ username, password, role });
     newUser.save((error) => {
       if (error) {
-        return res
-          .status(500)
-          .json({ message: { msgBody: "Error occured", msgError: true } });
+        return res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
       } else {
         return res.status(201).json({
           message: { msgBody: "Account created successfully", msgError: false },
