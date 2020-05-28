@@ -19,18 +19,35 @@ router.get("/", async (req, res) => {
 
 // post
 router.post("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
-  const { name, username } = req.body;
-  const user = await User.findOne({ username });
-  console.log(user);
-  const newArticle = new Article({ name });
+  // const { name, username } = req.body;
+  // const user = await User.findOne({ username });
+  // console.log(user);
+  // const newArticle = new Article({ name });
+  // newArticle.save((error) => {
+  //   console.log(newArticle);
+  //   if (error) {
+  //     return res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
+  //   } else {
+  //     // user.articles.push(newArticle);
+  //     return res.status(201).json({
+  //       message: { msgBody: "Article created successfully", msgError: false },
+  //     });
+  //   }
+  // });
+  const newArticle = new Article(req.body);
   newArticle.save((error) => {
-    console.log(newArticle);
     if (error) {
-      return res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
+      res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
     } else {
-      // user.articles.push(newArticle);
-      return res.status(201).json({
-        message: { msgBody: "Article created successfully", msgError: false },
+      req.user.articles.push(newArticle);
+      req.user.save((error) => {
+        if (error) {
+          res.status(500).json({ message: { msgBody: "Error occured", msgError: true } });
+        } else {
+          res.status(200).json({
+            message: { msgBody: "Article created successfully", msgError: false },
+          });
+        }
       });
     }
   });
